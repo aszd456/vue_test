@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/transition.css" />
+		<link href="https://cdn.jsdelivr.net/npm/animate.css@3.5.1" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<!--
+当插入或删除包含在 transition 组件中的元素时，Vue 将会做以下处理：
+
+自动嗅探目标元素是否应用了 CSS 过渡或动画，如果是，在恰当的时机添加/删除 CSS 类名。
+
+如果过渡组件提供了 JavaScript 钩子函数，这些钩子函数将在恰当的时机被调用。
+
+如果没有找到 JavaScript 钩子并且也没有检测到 CSS 过渡/动画，DOM 操作 (插入/删除) 在下一帧中立即执行。
+(注意：此指浏览器逐帧动画机制，和 Vue 的 nextTick 概念不同)
+-->
+
+		<div id="demo">
+			<button type="button" v-on:click="show=!show">
+				Toggle
+			</button>
+			<transition name="fade">
+				<p v-if="show">hello</p>
+			</transition>
+		</div>
+		<!--
+过渡的类名
+v-enter  v-enter-active    v-enter-to
+v-leave  v-leave-active    v-leave-to
+
+对于这些在过渡中切换的类名来说，如果你使用一个没有名字的 <transition>，则 v- 是这些类名的默认前缀。
+如果你使用了 <transition name="my-transition">，那么 v-enter 会替换为 my-transition-enter。
+
+-->
+		<!--CSS 过渡-->
+		<div id="example-1">
+			<button type="button" @click="show=!show">
+				Toggle render
+			</button>
+			<transition name="slide-fade">
+				<p v-if="show">hello</p>
+			</transition>
+		</div>
+
+		<!--CSS 动画-->
+		<div id="example-2">
+			<button @click="show = !show">Toggle show</button>
+			<transition name="bounce">
+				<p v-if="show">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris facilisis enim libero, at lacinia
+					diam fermentum id. Pellentesque habitant morbi tristique senectus et netus.</p>
+			</transition>
+		</div>
+
+		<!--自定义过渡的类名-->
+		<div id="example-3">
+			<button @click="show = !show">
+				Toggle render
+			</button>
+			<transition name="custom-classes-transition" enter-active-class="animated tada" leave-active-class="animated bounceOutRight">
+				<p v-if="show">hello</p>
+			</transition>
+		</div>
+
+		<!--显性的过渡持续时间
+		在这种情况下你可以用 <transition> 组件上的 duration 属性定制一个显性的过渡持续时间 (以毫秒计)：
+		<transition :duration="1000">...</transition>
+		<transition :duration="{ enter: 500, leave: 800 }">...</transition>
+		-->
+
+		<!--
+当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。否则，它们将被同步调用，过渡会立即完成。
+推荐对于仅使用 JavaScript 过渡的元素添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。
+这也可以避免过渡过程中 CSS 的影响。
+-->
+		<!--JavaScript 钩子-->
+		<div id="example-4">
+			<button @click="show = !show">
+				Toggle
+			</button>
+			<transition v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave" v-bind:css="false">
+				<p v-if="show">
+					Demo
+				</p>
+			</transition>
+		</div>
+
+		<!--可以通过 appear 特性设置节点在初始渲染的过渡-->
+		<transition appear>
+			<!-- ... -->
+		</transition>
+		<!--这里默认和进入/离开过渡一样，同样也可以自定义 CSS 类名-->
+		<transition appear appear-class="custom-appear-class" appear-to-class="custom-appear-to-class" (2.1.8+)
+		 appear-active-class="custom-appear-active-class">
+			<!-- ... -->
+		</transition>
+
+		<!--自定义 JavaScript 钩子-->
+		<transition appear v-on:before-appear="customBeforeAppearHook" v-on:appear="customAppearHook" v-on:after-appear="customAfterAppearHook"
+		 v-on:appear-cancelled="customAppearCancelledHook">
+			<!-- ... -->
+		</transition>
+
+
+		<!--#多个元素的过渡-->
+		<!--给在 <transition> 组件中的多个元素设置 key 是一个更好的实践-->
+		<transition>
+			<button v-if="isEditing" key="save">
+				Save
+			</button>
+			<button v-else key="edit">
+				Edit
+			</button>
+		</transition>
+		<!--可以通过给同一个元素的 key 特性设置不同的状态来代替 v-if 和 v-else，上面的例子可以重写为-->
+		<transition>
+			<button v-bind:key="isEditing">
+				{{ isEditing ? 'Save' : 'Edit' }}
+			</button>
+		</transition>
+
+		<transition>
+			<button v-if="docState === 'saved'" key="saved">
+				Edit
+			</button>
+			<button v-if="docState === 'edited'" key="edited">
+				Save
+			</button>
+			<button v-if="docState === 'editing'" key="editing">
+				Cancel
+			</button>
+		</transition>
+		<!--重写-->
+		<transition>
+			<button v-bind:key="docState">
+				{{ buttonMessage }}
+			</button>
+		</transition>
+		<!--
+	computed: {
+	  buttonMessage: function () {
+	    switch (this.docState) {
+	      case 'saved': return 'Edit'
+	      case 'edited': return 'Save'
+	      case 'editing': return 'Cancel'
+	    }
+	  }
+	}
+	-->
+		<hr>
+		<hr>
+		<hr>
+		<!--#过渡模式-->
+
+		<div id="no-mode-demo" class="demo">
+			<transition name="no-mode-fade">
+				<button v-if="on" key="on" @click="on=!on">
+					on
+				</button>
+				<button v-else key="off" @click="on=!on">
+					off
+				</button>
+			</transition>
+		</div>
+
+		<div id="no-mode-demo2" class="demo">
+			<transition name="no-mode-fade">
+				<button :key="docState" @click="change">
+					{{buttonMessage}}
+				</button>
+			</transition>
+		</div>
+
+		<div id="no-mode-absolute-demo" class="demo">
+			<div class="no-mode-absolute-demo-wrapper">
+				<transition name="no-mode-absolute-fade">
+					<button v-if="on" key="on" @click="on = false">
+						on
+					</button>
+					<button v-else="" key="off" @click="on = true">
+						off
+					</button>
+				</transition>
+			</div>
+		</div>
+
+		<div id="no-mode-translate-demo" class="demo">
+			<div class="no-mode-translate-demo-wrapper">
+				<transition name="no-mode-translate-fade">
+					<button v-if="on" key="on" @click="on = false">
+						on
+					</button>
+					<button v-else="" key="off" @click="on = true">
+						off
+					</button>
+				</transition>
+			</div>
+		</div>
+
+		<!--
+同时生效的进入和离开的过渡不能满足所有要求，所以 Vue 提供了 过渡模式
+
+in-out：新元素先进行过渡，完成之后当前元素过渡离开。
+
+out-in：当前元素先进行过渡，完成之后新元素过渡进入。
+-->
+
+		<div id="with-mode-demo" class="demo">
+			<transition name="with-mode-fade" mode="out-in">
+				<button v-if="on" key="on" @click="on = false">
+					on
+				</button>
+				<button v-else="" key="off" @click="on = true">
+					off
+				</button>
+			</transition>
+		</div>
+
+		<div id="in-out-translate-demo" class="demo">
+			<div class="in-out-translate-demo-wrapper">
+				<transition name="in-out-translate-fade" mode="in-out">
+					<button v-if="on" key="on" @click="on = false">
+						on
+					</button>
+					<button v-else="" key="off" @click="on = true">
+						off
+					</button>
+				</transition>
+			</div>
+		</div>
+		<hr>
+		<hr>
+		<hr>
+		<hr>
+		<hr>
+
+		<!--#多个组件的过渡-->
+		<div id="transition-components-demo" class="demo">
+			<input v-model="view" type="radio" value="v-a" id="a" name="view"><label for="a">A</label>
+			<input v-model="view" type="radio" value="v-b" id="b" name="view"><label for="b">B</label>
+			<transition name="component-fade" mode="out-in">
+				<component v-bind:is="view"></component>
+			</transition>
+		</div>
+
+
+		<!--#列表过渡  <transition-group>-->
+		<!--
+不同于 <transition>，它会以一个真实元素呈现：默认为一个 <span>。你也可以通过 tag 特性更换为其他元素。
+过渡模式不可用，因为我们不再相互切换特有的元素。
+内部元素 总是需要 提供唯一的 key 属性值。
+CSS 过渡的类将会应用在内部的元素中，而不是这个组/容器本身。
+
+-->
+		<!--列表的进入/离开过渡-->
+		<div id="list-demo" class="demo">
+			<button type="button" @click="add">Add</button>
+			<button type="button" @click="remove">Remove</button>
+			<transition-group name="list" tag="div">
+				<span v-for="item in items" :key="item" class="list-item">
+					{{item}}
+				</span>
+			</transition-group>
+		</div>
+
+		<!--列表的排序过渡-->
+		<!--
+<transition-group> 组件还有一个特殊之处。不仅可以进入和离开动画，还可以改变定位。
+要使用这个新功能只需了解新增的 v-move 特性，它会在元素的改变定位的过程中应用。
+像之前的类名一样，可以通过 name 属性来自定义前缀，也可以通过 move-class 属性手动设置
+-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.14.1/lodash.min.js"></script>
+
+		<div id="flip-list-demo" class="demo">
+			<button v-on:click="shuffle">Shuffle</button>
+			<transition-group name="flip-list" tag="ul">
+				<li v-for="item in items" v-bind:key="item">
+					{{ item }}
+				</li>
+			</transition-group>
+		</div>
+
+		<div id="list-complete-demo" class="demo">
+			<button v-on:click="shuffle">Shuffle</button>
+			<button v-on:click="add">Add</button>
+			<button v-on:click="remove">Remove</button>
+			<transition-group name="list-complete" tag="p">
+				<span v-for="item in items" v-bind:key="item" class="list-complete-item">
+					{{ item }}
+				</span>
+			</transition-group>
+		</div>
+
+
+		<div id="sudoku-demo" class="demo">
+			<strong>Lazy Sudoku</strong>
+			<p>Keep hitting the shuffle button until you win.</p>
+			<button @click="shuffle">
+				Shuffle
+			</button>
+			<transition-group name="cell" tag="div" class="sudoku-container">
+				<div v-for="cell in cells" :key="cell.id" class="cell">
+					{{ cell.number }}
+				</div>
+			</transition-group>
+		</div>
+
+		<!--#列表的交错过渡
+通过 data 属性与 JavaScript 通信 ，就可以实现列表的交错过渡
+-->
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
+
+		<div id="staggered-list-demo">
+			<input v-model="query">
+			<transition-group name="staggered-fade" tag="ul" v-bind:css="false" @before-enter="beforeEnter" @enter="enter"
+			 @leave="leave">
+				<li v-for="(item, index) in computedList" v-bind:key="item.msg" v-bind:data-index="index">{{ item.msg }}</li>
+			</transition-group>
+		</div>
+
+
+		<!--#动态过渡
+在 Vue 中即使是过渡也是数据驱动的！动态过渡最基本的例子是通过 name 特性来绑定动态值。
+<transition v-bind:name="transitionName">
+	.....
+</transition>
+-->
+
+		<div id="dynamic-fade-demo" class="demo">
+			Fade In: <input type="range" v-model="fadeInDuration" min="0" v-bind:max="maxFadeDuration">
+			Fade Out: <input type="range" v-model="fadeOutDuration" min="0" v-bind:max="maxFadeDuration">
+			<transition v-bind:css="false" v-on:before-enter="beforeEnter" v-on:enter="enter" v-on:leave="leave">
+				<p v-if="show">hello</p>
+			</transition>
+			<button v-if="stop" v-on:click="stop = false; show = false">Start animating</button>
+			<button v-else v-on:click="stop = true">Stop it!</button>
+		</div>
+
+
+
+		<h2>状态过渡</h2>
+		
+		
+		<h3>状态动画与侦听器</h3>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+		
+		<div id="animated-number-demo">
+		  <input v-model.number="number" type="number" step="20">
+		  <p>{{ animatedNumber }}</p>
+		</div>
+		
+		
+		<script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+		<script src="https://cdn.jsdelivr.net/npm/color-js@1.0.3"></script>
+		
+		<div id="example-7">
+		  <input
+		    v-model="colorQuery"
+		    v-on:keyup.enter="updateColor"
+		    placeholder="Enter a color"
+		  >
+		  <button v-on:click="updateColor">Update</button>
+		  <p>Preview:</p>
+		  <span
+		    v-bind:style="{ backgroundColor: tweenedCSSColor }"
+		    class="example-7-color-preview"
+		  ></span>
+		  <p>{{ tweenedCSSColor }}</p>
+		</div>
+		
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+		<div id="svg-polygon-demo" class="demo">
+		  <svg width="200" height="200" class="demo-svg">
+		    <polygon :points="points" class="demo-polygon"/>
+		    <circle cx="100" cy="100" r="90" class="demo-circle"/>
+		  </svg>
+		  <label>Sides: {{ sides }}</label>
+		  <input class="demo-range-input" type="range" min="3" max="500" v-model.number="sides">
+		  <label>Minimum Radius: {{ minRadius }}%</label>
+		  <input class="demo-range-input" type="range" min="0" max="90" v-model.number="minRadius">
+		  <label>Update Interval: {{ updateInterval }} milliseconds</label>
+		  <input class="demo-range-input" type="range" min="10" max="2000" v-model.number="updateInterval">
+		</div>
+		
+		
+		<script src="https://cdn.jsdelivr.net/npm/tween.js@16.3.4"></script>
+		
+		<div id="example-8">
+		  <input v-model.number="firstNumber" type="number" step="20"> +
+		  <input v-model.number="secondNumber" type="number" step="20"> =
+		  {{ result }}
+		  <p>
+		    <animated-integer v-bind:value="firstNumber"></animated-integer> +
+		    <animated-integer v-bind:value="secondNumber"></animated-integer> =
+		    <animated-integer v-bind:value="result"></animated-integer>
+		  </p>
+		</div>
+
+		<div id="" style="height: 6.25rem">
+
+		</div>
+	</body>
+	<script src="js/transition.js" type="text/javascript" charset="utf-8"></script>
+</html>

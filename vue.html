@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.min.js" charset="UTF-8" type="text/javascript"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/study.css" />
+	</head>
+	<body>
+		<div id="html-test">
+			<p>Using mustaches: {{ rawHtml }}</p>
+			<p>Using v-html directive: <span v-html="rawHtml"></span></p>
+		</div>
+
+		<div id="example">
+			<p>Original message: "{{ message }}"</p>
+			<p>Computed reversed message: "{{ reversedMessage }}"</p>
+		</div>
+		<hr>
+		<div id="demo">{{ fullName }}</div>
+		<hr>
+		<div id="watch-example">
+			<p>
+				Ask a yes/no question:
+				<input v-model="question">
+			</p>
+			<p>{{ answer }}</p>
+		</div>
+		<hr />
+		<div id="bind" v-bind:class="classObject">bindTest</div>
+		<div v-bind:class="[activeClass, errorClass]"></div>
+		<div v-bind:class="[isActive ? activeClass : '', errorClass]"></div>
+		<!--数组绑定-->
+		<!--style
+		 v-bind:style 的对象语法十分直观——看着非常像 CSS，但其实是一个 JavaScript 对象
+		 绑定中的属性提供一个包含多个值的数组-->
+		<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+		<div :style="{ display: ['-webkit-box', '-ms-flexbox', 'flex'] }"></div>
+		<!--
+		v-bind:style 的数组语法可以将多个样式对象应用到同一个元素上：
+		-->
+		<div v-bind:style="[baseStyles, overridingStyles]"></div>
+
+		<hr />
+		<div id="vif">
+			<div v-if="type === 'A'">
+				A
+			</div>
+			<div v-else-if="type === 'B'">
+				B
+			</div>
+			<div v-else-if="type === 'C'">
+				C
+			</div>
+			<div v-else>
+				Not A/B/C
+			</div>
+		</div>
+
+		<div id="key-example" class="demo">
+			<div>
+				<template v-if="loginType === 'username'">
+					<label>Username</label>
+					<input placeholder="Enter your username" key="username-input">
+				</template>
+				<template v-else="">
+					<label>Email</label>
+					<input placeholder="Enter your email address" key="email-input">
+				</template>
+			</div>
+			<button @click="toggleLoginType">Toggle login type</button>
+		</div>
+
+
+		<!--
+		注意，v-show 不支持 <template> 元素，也不支持 v-else
+		-->
+		<h1 v-show="ok">Hello!</h1>
+		<hr />
+		<ul id="example-1">
+			<li v-for="item of items">
+				{{ item.message }}
+			</li>
+		</ul>
+
+		<ul id="example-2">
+			<li v-for="(item, index) of items">
+				{{ parentMessage }} - {{ index }} - {{ item.message }}
+			</li>
+		</ul>
+		<ul id="v-for-object" class="demo">
+			<li v-for="value of object">
+				{{ value }}
+			</li>
+			<div v-for="(value, name) in object">
+				{{ name }}: {{ value }}
+			</div>
+			<div v-for="(value, name, index) in object">
+				{{ index }}. {{ name }}: {{ value }}
+			</div>
+		</ul>
+
+		<div v-for="item in items" v-bind:key="item.id"></div>
+		<hr />
+		<ul id="filterList">
+			<li v-for="n in evenNumbers">{{ n }}</li>
+			<hr />
+			<li v-for="n in even(numbers)">{{ n }}</li>
+		</ul>
+
+		<hr />
+		<ul>
+			<template v-for="item in items">
+				<li>{{ item.msg }}</li>
+				<li class="divider" role="presentation"></li>
+			</template>
+		</ul>
+
+		<ul v-if="todos.length">
+			<li v-for="todo in todos">
+				{{ todo }}
+			</li>
+		</ul>
+		<p v-else>No todos left!</p>
+
+		<my-component v-for="item in items" :key="item.id"></my-component>
+		<my-component v-for="(item, index) in items" v-bind:item="item" v-bind:index="index" v-bind:key="item.id">
+		</my-component>
+		<hr />
+		<div id="todo-list-example">
+			<form @submit.prevent="addNewTodo">
+				<label for="new-todo">Add a todo</label>
+				<input v-model="newTodoText" id="new-todo" placeholder="E.g. Feed the cat">
+				<button type="submit">Add</button>
+			</form>
+			<ul>
+				<li is="todo-item" v-for="(todo, index) in todos" :key="todo.id" :title="todo.title" @remove="deleteTode(index)"></li>
+			</ul>
+			<!--注意这里的 is="todo-item" 属性。这种做法在使用 DOM 模板时是十分必要的，
+		  因为在 <ul> 元素内只有 <li> 元素会被看作有效内容。这样做实现的效果与 <todo-item> 相同，
+		  但是可以避开一些潜在的浏览器解析错误。-->
+		</div>
+
+		<hr />
+		<div id="example-on-1">
+			<button @click="counter+=1">Add 1</button>
+			<p>The button above has been clicked {{ counter }} times.</p>
+		</div>
+
+		<div id="example-on-2">
+			<button @click="greet">Greet</button>
+		</div>
+
+		<div id="example-on-3">
+			<button @click="say('hi',$event)">Say hi</button>
+			<button @click="say('what',$event)">Say what</button>
+		</div>
+		<!--有时也需要在内联语句处理器中访问原始的 DOM 事件。可以用特殊变量 $event 把它传入方法：-->
+		<div id="warnApp">
+			<button @click="warn('Form cannot be submitted yet.', $event)">
+				Submit
+			</button>
+		</div>
+
+		<!--
+		// ...
+		methods: {
+		  warn: function (message, event) {
+		    // 现在我们可以访问原生事件对象
+		    if (event) event.preventDefault()
+		    alert(message)
+		  }
+		}
+		-->
+
+		<!-- 点击事件将只会触发一次 -->
+		<a @click.once="doThis"></a>
+		<!--Vue 还对应 addEventListener 中的 passive 选项提供了 .passive 修饰符-->
+		<!-- 滚动事件的默认行为 (即滚动行为) 将会立即触发 -->
+		<!-- 而不会等待 `onScroll` 完成  -->
+		<!-- 这其中包含 `event.preventDefault()` 的情况 -->
+		<div @scroll.passive="onScroll"></div>
+
+		<!-- 只有在 `key` 是 `Enter` 时调用 `vm.submit()` -->
+		<input @keyup.enter="submit">
+		<input @keyup.page-down="onPageDown">
+		<!--
+		.enter
+		.tab
+		.delete (捕获“删除”和“退格”键)
+		.esc
+		.space
+		.up
+		.down
+		.left
+		.right
+		// 可以使用 `v-on:keyup.f1`
+		Vue.config.keyCodes.f1 = 112
+		
+		.ctrl
+		.alt
+		.shift
+		.meta
+		-->
+		<!-- Alt + C -->
+		<input @keyup.alt.67="clear">
+
+		<!-- Ctrl + Click -->
+		<div @click.ctrl="doSomething">Do something</div>
+
+		<!--
+		.exact 修饰符允许你控制由精确的系统修饰符组合触发的事件。
+		-->
+
+		<!-- 即使 Alt 或 Shift 被一同按下时也会触发 -->
+		<button @click.ctrl="onClick">A</button>
+
+		<!-- 有且只有 Ctrl 被按下的时候才触发 -->
+		<button @click.ctrl.exact="onCtrlClick">A</button>
+
+		<!-- 没有任何系统修饰符被按下的时候才触发 -->
+		<button @click.exact="onClick">A</button>
+		<!--
+		.left
+		.right
+		.middle
+		这些修饰符会限制处理函数仅响应特定的鼠标按钮。
+		-->
+
+		<!--
+		v-model 在内部为不同的输入元素使用不同的属性并抛出不同的事件：
+		text 和 textarea 元素使用 value 属性和 input 事件；
+		checkbox 和 radio 使用 checked 属性和 change 事件；
+		select 字段将 value 作为 prop 并将 change 作为事件。-->
+
+		<hr />
+		<div id="model-1">
+			<input v-model="message" placeholder="edit me" />
+			<p>Message is:{{message}}</p>
+		</div>
+		<div id="model-2">
+			<span>Multiline message is:</span>
+			<p style="white-space: pre-line;">{{ message }}</p>
+			<textarea v-model="message" placeholder="add multiple lines"></textarea>
+		</div>
+
+		<br>
+
+		<div id="example-check">
+			<input type="checkbox" id="checkbox" v-model="checked">
+			<label for="checkbox">{{ checked }}</label>
+		</div>
+
+		<div id='example-checkbox-3'>
+			<input type="checkbox" id="jack" value="Jack" v-model="checkedNames">
+			<label for="jack">Jack</label>
+			<input type="checkbox" id="john" value="John" v-model="checkedNames">
+			<label for="john">John</label>
+			<input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+			<label for="mike">Mike</label>
+			<br>
+			<span>Checked names: {{ checkedNames }}</span>
+		</div>
+
+		<div id="example-4">
+			<input type="radio" name="e4" id="one" value="One" v-model="picked">
+			<label for="one">One</label>
+			<br>
+			<input type="radio" name="e4" id="two" value="Two" v-model="picked">
+			<label for="two">Two</label>
+			<br>
+			<span>Picked: {{ picked }}</span>
+		</div>
+
+
+		<div id="example-selected-5">
+			<select v-model="selected">
+				<option disabled value="">请选择</option>
+				<option value="A">A</option>
+				<option value="B">B</option>
+				<option value="C">C</option>
+			</select>
+			<span>Selected: {{selected}}</span>
+		</div>
+		<hr>
+
+		<div id="example-6">
+			<select v-model="selected" multiple style="width: 50px;">
+				<option value="a">A</option>
+				<option value="b">B</option>
+				<option value="c">C</option>
+			</select>
+			<br>
+			<span>Selected: {{ selected }}</span>
+		</div>
+
+		<div id="example-7">
+			<select v-model="selected">
+				<option v-for="option in options" :value="option.value">
+					{{ option.text }}
+				</option>
+			</select>
+			<span>Selected: {{ selected }}</span>
+		</div>
+
+		<!--但是有时我们可能想把值绑定到 Vue 实例的一个动态属性上，
+		这时可以用 v-bind 实现，并且这个属性的值可以不是字符串。-->
+		<input type="radio" v-model="pick" v-bind:value="a">aaaa
+		<select v-model="selected">
+			<!-- 内联对象字面量 -->
+			<option v-bind:value="{ number: 123 }">123</option>
+		</select>
+		<!--
+		// 当选中时
+		typeof vm.selected // => 'object'
+		vm.selected.number // => 123
+		-->
+
+		<!--
+		在默认情况下，v-model 在每次 input 事件触发后将输入框的值与数据进行同步 (除了上述输入法组合文字时)。
+		你可以添加 lazy 修饰符，从而转变为使用 change 事件进行同步：-->
+		<!-- 在“change”时而非“input”时更新 -->
+		<input v-model.lazy="msg" />
+		<!--
+		如果想自动将用户的输入值转为数值类型，可以给 v-model 添加 number 修饰符：
+		-->
+		数值类型<input v-model.number="age" type="number" />
+		<!--
+		如果要自动过滤用户输入的首尾空白字符，可以给 v-model 添加 trim 修饰符：-->
+		自动过滤用户输入的首尾空白字符<input v-model.trim="msg" />
+
+		<div id="components-demo">
+			<button-counter>
+				<h3>丢那星</h3>
+			</button-counter>
+			<button-counter></button-counter>
+		</div>
+
+		<div id="components-demo3" class="demo">
+			<button-counter2>You clicked me 13 times.</button-counter2>
+			<button-counter2>You clicked me 13 times.</button-counter2>
+			<button-counter2>You clicked me 13 times.</button-counter2>
+		</div>
+		<div id="components-blog">
+			<blog-post title="My journey with Vue"></blog-post>
+			<blog-post title="Blogging with Vue"></blog-post>
+			<blog-post title="Why Vue is so fun"></blog-post>
+		</div>
+		<hr>
+		<div id="components-blog2">
+			<blog-post v-for="post in posts" v-bind:key="post.id" v-bind:post="post"></blog-post>
+		</div>
+		<hr>
+
+		<div id="blog-posts-events-demo">
+			<div v-bind:style="{ fontSize: postFontSize + 'em' }">
+				<blog-post2 v-for="post in posts" v-bind:key="post.id" v-bind:post="post" @enlarge-text="postFontSize += 0.1"
+				 @enlarge-text2="postFontSize -= $event" @enlarge-text3="onEnlargeText(0.1)">
+				</blog-post2>
+			</div>
+		</div>
+		<hr>
+
+		<input v-model="searchText">
+		<!--等价于-->
+		<input v-bind:value="searchText" v-on:input="searchText = $event.target.value">
+
+
+		<custom-input v-model="searchText"></custom-input>
+
+		<!--等价于-->
+		<custom-input v-bind:value="searchText" v-on:input="searchText = $event"></custom-input>
+
+		<!--为了让它正常工 作，这个组件内的 <input> 必须：
+		将其 value 特性绑定到一个名叫 value 的 prop 上
+		在其 input 事件被触发时，将新的值通过自定义的 input 事件抛出 -->
+
+		<div id="slots-demo" class="demo">
+			<alert-box>Something bad happened.</alert-box>
+		</div>
+		<style type="text/css">
+			.demo-alert-box {
+				padding: 10px 20px;
+				background: #f3beb8;
+				border: 1px solid #f09898;
+			}
+		</style>
+
+
+		<div id="dynamic-component-demo" class="demo">
+			<button v-for="tab in tabs" v-bind:key="tab" class="dynamic-component-demo-tab-button" 
+			v-bind:class="{ 'dynamic-component-demo-tab-button-active': tab === currentTab }"
+			 @click="currentTab = tab">
+				{{ tab }}
+			</button>
+			<component v-bind:is="currentTabComponent" class="dynamic-component-demo-tab"></component>
+		</div>
+
+		<div id="" style="height: 6.25rem">
+			
+		</div>
+	</body>
+	<script src="js/study.js" charset="UTF-8" type="text/javascript"></script>
+
+</html>

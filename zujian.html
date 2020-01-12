@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.min.js" charset="UTF-8" type="text/javascript"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/page.css" />
+		<link rel="stylesheet" type="text/css" href="./css/test.css" />
+	</head>
+	<body>
+		<!--传递静态或动态 Prop
+			
+			静态：<blog-post title="My journey with Vue"></blog-post>
+			动态：<blog-post v-bind:title="post.title + ' by ' + post.author.name"></blog-post>
+			
+			传入一个数字：
+				<blog-post v-bind:likes="42"></blog-post>
+				<blog-post v-bind:likes="post.likes"></blog-post>
+			
+			传入一个布尔值：
+				<blog-post is-published></blog-post> 默认true
+				<blog-post v-bind:is-published="false"></blog-post>这是一个 JavaScript 表达式而不是一个字符串
+				<blog-post v-bind:is-published="post.isPublished"></blog-post>
+				
+			传入一个数组:
+				<blog-post v-bind:comment-ids="[234, 266, 273]"></blog-post>
+				<blog-post v-bind:comment-ids="post.commentIds"></blog-post>
+				
+			传入一个对象:
+				<blog-post
+				  v-bind:author="{
+				    name: 'Veronica',
+				    company: 'Veridian Dynamics'
+				  }"
+				></blog-post>
+				<blog-post v-bind:author="post.author"></blog-post>
+			
+			传入一个对象的所有属性:
+				<blog-post v-bind="post"></blog-post>
+				等价于：
+				<blog-post
+				  v-bind:id="post.id"
+				  v-bind:title="post.title"
+				></blog-post>
+				
+			
+		-->
+		
+		<div id="app">
+			<button-counter :title="postTitle"></button-counter>
+			<test></test>
+			<blog-post :post-title="postTitle" :a="a"></blog-post>
+		</div>
+
+		<div id="app2">
+			<base-input v-bind:label="label" v-model="username" required placeholder="Enter your username"></base-input>
+			<p>{{label}}:{{username}}</p>
+		</div>
+
+		<div id="counter-event-example">
+			<p>{{ total }}</p>
+			<button-counter @increment="incrementTotal"></button-counter>
+			<button-counter @increment="incrementTotal"></button-counter>
+		</div>
+
+		<div id="model-test">
+			<base-checkbox v-model="lovingVue"></base-checkbox>
+			<p>{{lovingVue}}</p>
+		</div>
+		<!--
+		这里的 lovingVue 的值将会传入这个名为 checked 的 prop。同时当 <base-checkbox> 
+		触发一个 change 事件并附带一个新的值的时候，这个 lovingVue 的属性将会被更新
+		注意：你仍然需要在组件的 props 选项里声明 checked 这个 prop。
+		-->
+
+		<div id="customApp">
+			<p>{{message}}</p>
+			<custom v-model="message"></custom>
+		</div>
+
+		<div id="listen-input">
+			<base-input2 :label="label" :value="value"></base-input2>
+		</div>
+		<hr>
+
+		<div id='syncDemo' class="details">
+			<sync-component :show.sync='valueChild' style="padding: 30px 20px 30px 5px;border:1px solid #ddd;margin-bottom: 10px;"></sync-component>
+			<button @click="changeValue">toggle</button>
+		</div>
+
+		<!--具名插槽
+			<slot> 元素有一个特殊的特性：name。这个特性可以用来定义额外的插槽
+			
+		-->
+		<div class="container">
+			<header>
+				<slot name="header"></slot>
+			</header>
+			<main>
+				<slot></slot>
+				<!--一个不带 name 的 <slot> 出口会带有隐含的名字“default”-->
+			</main>
+			<footer>
+				<slot name="footer"></slot>
+			</footer>
+		</div>
+
+		<!--
+		在向具名插槽提供内容的时候，我们可以在一个 <template> 元素上使用 v-slot 指令，
+		并以 v-slot 的参数的形式提供其名称：
+		<base-layout>
+		  <template v-slot:header>
+		    <h1>Here might be a page title</h1>
+		  </template>
+		
+		  <p>A paragraph for the main content.</p>
+		  <p>And another one.</p>
+		
+		  <template v-slot:footer>
+		    <p>Here's some contact info</p>
+		  </template>
+		</base-layout>
+		
+		注意 v-slot 只能添加在 <template> 上 (只有一种例外情况)，这一点和已经废弃的 slot 特性不同。
+		
+		-->
+		<hr>
+		<div id="layout-div">
+			<base-layout>
+				<template v-slot:header>
+					<h1>Here might be a page title</h1>
+				</template>
+				<template v-slot:default>
+					<p>A paragraph for the main content.</p>
+					<p>And another one.</p>
+				</template>
+				<template #footer>
+					<p>Here's some contact info</p>
+				</template>
+			</base-layout>
+		</div>
+
+		<hr>
+		<!--作用域插槽：重点是slotProps接取子组件里:user="user" :test="test"类似属性的数据
+		
+		具名插槽的缩写
+			v-slot:header 可以被重写为 #header
+		-->
+		<div id="current-user-div">
+			<current-user>
+				<template v-slot:default="slotProps">
+					{{ slotProps.user.firstName }}
+				</template>
+			</current-user>
+			<!--解构插槽 Prop
+			<template v-slot:default="{user,test}">
+			<template v-slot:default="{user:person,test}"> 将 user 重命名为 person
+			<template v-slot:default="{user:person={firstName:'草'},test}">
+			-->
+			<current-user>
+				<template #default="{user:person,test}">
+					{{person.firstName}}
+				</template>
+			</current-user>
+		</div>
+		<!--
+		// v-slot:[dynamicSlotName]="{user:person,test}
+		slotProps 可以随意命名
+		slotProps 接取的是子组件标签slot上属性数据的集合所有v-bind:user="user"
+		
+		动态指令参数也可以用在 v-slot 上，来定义动态的插槽名：
+		<base-layout>
+		  <template v-slot:[dynamicSlotName]>
+		    ...
+		  </template>
+		</base-layout>
+		
+		-->
+
+		<hr>
+		<hr>
+		<div id="v-slot-div">
+			<todo-list>
+				<template #default={todo}>
+					<div @click=type(todo.id)>
+						{{todo.text}}
+					</div>
+				</template>
+			</todo-list>
+
+		</div>
+
+
+
+		<style scoped>.slotTodoChildren .lis{  display: block;  background: #434534;  line-height:40px;  margin-top: 10px;  color: #fff;  font-size: 24px;  height: 40px;}</style>
+
+		<!--动态组件 & 异步组件-->
+		<div id="dt-div">
+			<component :is="currentConfig" :config="config"></component>
+		</div>
+		<hr>
+		<hr>
+
+		<div id="dt-div2">
+			<button @click='toShow'>点击显示子组件</button>
+			<component :is="which_to_show"></component>
+		</div>
+		<!--
+		动态切换掉的组件（非当前显示的组件）是被移除掉了，如果把切换出去的组件保留在内存中，
+		可以保留它的状态或避免重新渲染。为此可以添加一个 keep-alive 指令参数
+		-->
+		<div id="dt-div3">
+			<button @click='toShow'>点击显示子组件</button>
+			<!----或者<component v-bind:is="which_to_show" keep-alive></component>也行----->
+			<keep-alive>
+				<component :is="which_to_show"></component>
+			</keep-alive>
+		</div>
+
+		<div id="dt-div4">
+			<button @click='toShow'>点击显示子组件</button>
+			<!----或者<component v-bind:is="which_to_show" keep-alive></component>也行----->
+			<keep-alive>
+				<component :is="which_to_show"></component>
+			</keep-alive>
+		</div>
+
+
+		<div id="dynamic-component-demo" class="demo">
+			<button type="button" v-for="(tab,index) in tabs" :key="index" :class="{'dynamic-component-demo-active' : currentTab===tab}"
+			 @click="currentTab=tab" class="dynamic-component-demo-tab-button">
+				{{tab}}
+			</button>
+			<keep-alive>
+				<component v-bind:is="currentTabComponent"></component>
+			</keep-alive>
+		</div>
+
+
+		<div id="example"> <button @click="change">切换页面</button>
+			<component :is="currentView"></component>
+		</div>
+
+		<!--
+		条件判断
+		 
+		如果有多个条件性的子元素，<keep-alive> 要求同时只有一个子元素被渲染:
+
+		-->
+		<div id="example2"> <button @click="change">切换页面</button>
+			<keep-alive>
+				<home v-if="index===0"></home>
+				<posts v-else-if="index===1"></posts>
+				<archive v-else></archive>
+			</keep-alive>
+		</div>
+
+		<!--
+		activated 和 deactivated
+		 
+		activated 和 deactivated 在 <keep-alive> 树内的所有嵌套组件中触发:
+
+		-->
+
+		<div id="example3"> <button @click="change">切换页面</button>
+			<keep-alive>
+				<component :is="currentView" @pass-data="getData"></component>
+			</keep-alive>
+			<p>{{msg}}</p>
+		</div>
+
+		<!--
+		include和exclude
+		 
+		include 和exclude属性允许组件有条件地缓存。二者都可以用逗号分隔字符串、正则表达式或一个数组来表示:
+
+		-->
+
+		<!-- 逗号分隔字符串 -->
+		<keep-alive include="a,b">
+			<component :is="view"></component>
+		</keep-alive><!-- 正则表达式 (使用 v-bind) -->
+		<keep-alive :include="/a|b/">
+			<component :is="view"></component>
+		</keep-alive><!-- Array (use v-bind) -->
+		<keep-alive :include="['a', 'b']">
+			<component :is="view"></component>
+		</keep-alive>
+		<!---
+		匹配首先检查组件自身name选项，如果name选项不可用，
+		则匹配它的局部注册名称（父组件 components 选项的键值）。匿名组件不能被匹配。
+		-->
+
+		<keep-alive include="home,archive">
+			<component :is="currentView"></component>
+		</keep-alive>
+		<!--上面的代码，表示只缓存home和archive，不缓存posts--->
+		<hr >
+		<hr >
+		
+		
+		<google-map>
+		  <google-map-region v-bind:shape="cityBoundaries">
+		    <google-map-markers v-bind:places="iceCreamShops"></google-map-markers>
+		  </google-map-region>
+		</google-map>
+		<!--
+		provide 选项允许我们指定我们想要提供给后代组件的数据/方法
+		provide: function () {
+		  return {
+		    getMap: this.getMap
+		  }
+		}
+		然后在任何后代组件里，我们都可以使用 inject 选项来接收指定的我们想要添加在这个实例上的属性：
+		inject: ['getMap']
+		-->
+		
+		<div id="" style="height: 6.25rem">
+			
+		</div>
+		
+		
+	</body>
+	<script src="js/zujian.js" type="text/javascript" charset="utf-8"></script>
+</html>

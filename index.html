@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<!--
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+		使用target属性的时候，最好跟rel="noreferrer"一起使用，这样可以避免安全风险
+		-->
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+		</script>
+	</head>
+	<body>
+		<form>
+			<fieldset>
+				<p>年龄：<input type="text" name="age"></p>
+				<p>性别：<input type="text" name="gender"></p>
+			</fieldset>
+			<label for="user">用户名：</label>
+			<input type="text" name="user" id="user">
+			<input type="range" id="start" name="volume" min="0" max="11">
+			<input type="color" id="background" name="background" value="#e66465">
+			<input type="date" id="start" name="start" value="2018-07-22" min="2018-01-01" max="2018-12-31">
+			<input type="time" id="appt" name="appt"
+			       min="9:00" max="18:00" required>
+			
+			<small>营业时间上午9点到下午6点</small>
+			<label>宠物：
+			  <select name="pets" multiple size="4">
+			    <optgroup label="四条腿的宠物">
+			      <option value="dog">狗</option>
+			      <option value="cat">猫</option>
+			    </optgroup>
+			    <optgroup label="鸟类">
+			      <option value="parrot">鹦鹉</option>
+			      <option value="thrush">画眉</option>
+			    </optgroup>
+			  </select>
+			</label>
+			<label for="ice-cream-choice">冰淇淋：</label>
+			<input type="text" list="ice-cream-flavors" id="ice-cream-choice" name="ice-cream-choice" />
+			
+			<datalist id="ice-cream-flavors">
+			  <option value="巧克力">
+			  <option value="椰子">
+			  <option value="薄荷">
+			  <option value="草莓">
+			  <option value="香草">
+			</datalist>
+		</form>
+		<a href="tel:13172615891">13172615891</a>
+		<a href="data:,Hello%2C%20World!" download="hello.txt">点击</a>
+		
+		<figure>
+			<p><code>const foo = 'hello';</code></p>
+			<figcaption>JavaScript 代码示例</figcaption>
+		</figure>
+
+		<dl>
+			<dt>CPU</dt>
+			<dd>中央处理器</dd>
+
+			<dt>Memory</dt>
+			<dd>内存</dd>
+
+			<dt>Hard Disk</dt>
+			<dd>硬盘</dd>
+		</dl>
+		<ol>
+			<li>列表项 A</li>
+			<li value="4">列表项 B</li>
+			<li>列表项 C</li>
+		</ol>
+
+		<ol type="a">
+			<li>列表项 A</li>
+			<li>列表项 B</li>
+			<li>列表项 C</li>
+		</ol>
+		<ol reversed>
+			<li>列表项 A</li>
+			<li>列表项 B</li>
+			<li>列表项 C</li>
+		</ol>
+
+		<del>
+			<p>会议定于5月8日举行。</p>
+		</del>
+		<ins>
+			<p>会议定于5月9日举行。</p>
+		</ins>
+		<p>
+			通过 TCP/IP 协议连接的全球性计算机网络，叫做 <dfn>Internet</dfn>。
+		</p>
+
+		<ruby>
+			汉<rp>(</rp>
+			<rt>han</rt>
+			<rp>)</rp>
+			字<rp>(</rp>
+			<rt>zi</rt>
+			<rp>)</rp>
+		</ruby>
+
+		<p>床前明月光，<bdo dir="rtl">霜上地是疑</bdo>。</p>
+
+		<p contenteditable="true" spellcheck="true">
+			英语单词 separate 容易写错成 seperate。
+		</p>
+		<span id="text"></span>
+		<p>水分子是 H<sub>2</sub>O。</p>
+		<p>勾股定理是
+			<var>a</var><sup>2</sup> + <var>b</var><sup>2</sup> = <var>c</var><sup>2</sup>
+			。</p>
+		<p>
+			一个容易写错的成语是把<em>安分守己</em>写成<u>安份守己</u>。
+		</p>
+		<p>今天特价商品：<s>三文鱼</s>（售完）</p>
+		<blockquote cite="https://quote.example.com">
+			<p>天才就是 1% 的天赋和99%的汗水。</p>
+		</blockquote>
+		<cite>-- 爱迪生</cite>
+
+		<p>更多资料请看<cite>维基百科</cite>。</p>
+
+		<p>
+			莎士比亚的《哈姆雷特》有一句著名的台词：
+			<q cite="https://quote.example.com">活着还是死亡，这是一个问题。</q>
+		</p>
+		<pre>
+		<code>
+		  let a = 1;
+		  console.log(a);
+		</code>
+		</pre>
+
+		<p>Windows 可以按下 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Del</kbd> 重启。</p>
+		<p>如果使用没有定义的变量，浏览器会报错：
+			<samp>Uncaught ReferenceError: foo is not defined</samp>。
+		</p>
+
+		<p>我们讨论以后决定，<mark>运行会在下周三举办</mark>。</p>
+		<blockquote>
+			床前明月光，疑是地上霜。<mark>举头望明月，低头思故乡。</mark>
+		</blockquote>
+		<p>文章正文</p>
+		<p><small>以上内容使用创意共享许可证。</small></p>
+
+		<p>运动会预定<time datetime="2015-06-10">下周三</time>举行。</p>
+
+		<p>作者的联系方式：</p>
+
+		<address>
+			<p><a href="mailto:foo@example.com">foo@example.com</a></p>
+			<p><a href="tel:+555-34762301">+555-34762301</a></p>
+		</address>
+
+		<address>
+			文章的相关问题请联系<a href='mailto:zhangsan@example.com'>张三
+				McClure</a>。
+		</address>
+		<abbr title="HyperText Markup Language">HTML</abbr>
+		<img src="bkq.jpg" loading="lazy" alt="…" width="200" height="200">
+		<figure>
+			<img src="bkq.jpg">
+			<figcaption>示例图片</figcaption>
+		</figure>
+	</body>
+	<script>
+		var browser = {
+			versions: function() {
+				var u = navigator.userAgent,
+					app = navigator.appVersion;
+				return { //移动终端浏览器版本信息
+					trident: u.indexOf('Trident') > -1, //IE内核
+					presto: u.indexOf('Presto') > -1, //opera内核
+					webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+					gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+					mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+					ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+					android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或uc浏览器
+					iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+					iPad: u.indexOf('iPad') > -1, //是否iPad
+					webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+				};
+			}(),
+			language: (navigator.browserLanguage || navigator.language).toLowerCase()
+		}
+		$(function() {
+			var book = {
+				title: 'Professional Javascript',
+				authors: ['Nicholas', 'Zakas'],
+				edition: 3,
+				year: 2011
+			};
+			var jsonText = JSON.stringify(book, ['title', 'edition']);
+			$('#text').html(jsonText);
+			var jsonText = JSON.stringify(book);
+			$('#text').html(jsonText);
+
+			var colors = ['read', 'green', 'blue'];
+			$('#text').html(colors.join(','));
+
+			colors.push('black');
+			var pop = colors.pop();
+			// alert(pop);
+			$('#text').html(colors.join('|'));
+
+			var colors2 = new Array();
+			var count2 = colors.unshift('red', 'green');
+			$('#text').html(count2 + '' + colors);
+
+			var colors4 = ['red', 'green', 'blue'];
+			var removed = colors4.splice(0, 1);
+			$('#text').html(colors4 + ":" + removed); //green,blue:red
+
+			removed = colors4.splice(1, 0, "yellow", "orange");
+			$('#text').html(colors4 + ":" + removed); //green,yellow,orange,blue:
+
+			removed = colors4.splice(1, 1, "red", "purple");
+			$('#text').html(colors4 + ":" + removed); //green,red,purple,orange,blue:yellow
+
+			var numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+			var everyResult = numbers.every(function(item, index, array) {
+				return (item > 2);
+			}); //false
+
+			var someResult = numbers.some(function(item, index, array) {
+				return (item > 2);
+			}); //true
+
+			var filterResult = numbers.filter(function(item, index, array) {
+				return (item > 2);
+			});
+			$('#text').html(filterResult.join(',')); //3,4,5,4,3
+			var mapResult = numbers.map(function(item, index, array) {
+				return item * 2;
+			});
+			$('#text').html(mapResult.join(',')); //[2,4,6,8,10,8,6,4,2]
+
+			// Date.parse()
+			// $('#text').html(new Date(Date.parse('May 25,2004'))+"&&&&&"+new Date(Date.UTC(2005,4,5,17,55,55)));
+
+			function factorial(num) {
+				if (num < 1) {
+					return 1;
+				} else {
+					return num * arguments.callee(num - 1);
+				}
+			}
+
+			var values = [1, 2, 3, 4, 5, 6, 78, 89];
+			var max = Math.max.apply(Math, values);
+			$('#text').html(max);
+
+			function Person() {}
+			Person.prototype.name = 'leo';
+			Person.prototype.sayName = function() {
+				alert(this.name);
+			}
+			var person = new Person();
+			$('#text').html(Person.prototype.isPrototypeOf(person)); //true
+			$('#text').html(Object.getPrototypeOf(person).name); //leo
+
+			person.hasOwnProperty('name'); //false 来自原型
+			person.name = "jack";
+			person.hasOwnProperty('name'); //true，来自实例
+
+			var keys = Object.keys(Person.prototype);
+			$('#text').html(keys.join(',')); //name,sayName
+
+
+		})
+	</script>
+</html>
