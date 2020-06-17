@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="js/vue.min.js" charset="UTF-8" type="text/javascript"></script>
+		<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+	</head>
+	<body>
+		<div id="app">
+			<h1>{{message}}</h1>
+			<h1 v-if="isshow">{{isshow}}ok</h1>
+			<input type="text" v-model="message" />{{message}}
+			<button type="button" @click="click()">click</button>
+		</div>
+
+		<hr>生命周期函数|钩子函数
+
+		<div id="demo">
+			<h1>{{message}}</h1>
+			<button @click="changemessage()">changemessage</button>
+			<button @click="destory()" type="button">销毁</button>
+		</div>
+
+		<hr>vue组件
+
+
+		<div id="box">
+			{{message}}
+			<all></all>
+		</div>
+
+		<div id="box">
+			<test>
+			</test>
+		</div>
+		<template id='box1'>
+			<div>
+				<input type="text" v-model="message" />
+				<box1 num="1" txt='yi' :msg="message"></box1>
+				<box1 num="2" txt='er' :msg="message"></box1>
+			</div>
+		</template>
+
+
+		<script src="js/ksrm_vue.js" type="text/javascript" charset="utf-8"></script>
+	</body>
+</html>
