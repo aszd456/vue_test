@@ -4,11 +4,69 @@
 		<meta charset="utf-8">
 		<title></title>
 		<script src="../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.fixed-width {
+				display: inline-block;
+				width: 6.25rem;
+			}
+			.btn {
+				outline: none;
+				border: none;
+				cursor: pointer;
+				padding: 0.3125rem 0.75rem;
+			}
+			.btn-text {
+				color: #409eff;
+				background-color: transparent;
+			}
+			.btn-text:hover {
+				color: #66b1ff;
+			}
+		</style>
 	</head>
 	<body>
 		<div id="app">
 			<h1>{{title}}</h1>
 			<button-counter></button-counter>
+		</div>
+		
+		<div id="assign">
+			<h2>{{title}}</h2>
+			<p>{{obj.profile}}</p>
+			<button @click="toggle">toggle</button>
+		</div>
+		
+		<!--属性选项-->
+		<div id="sxxx">
+			<color-text text="hello"></color-text>
+			<br>
+			<color-text></color-text>
+			<br>
+			<color-text color="#f78" text="hello"></color-text>
+			<br>
+			<color-text color="#43dt" text="hello"></color-text>
+			<br>
+		</div>
+		
+		<div id="jssx">
+			<p>{{message}}</p>
+			<p>{{noSpaceMsg}}</p>
+			<p>{{palindromeMsg}}</p>
+			<p>{{watchmessage}}</p>
+		</div>
+		
+		<p id="cssgz"><strong class="fixed-width">css</strong>{{msg}}</p>
+		<p id="sdgz"><strong class="fixed-width">手动挂载</strong>{{msg}}</p>
+		<button onclick="handleMount()">手动挂载</button>
+		
+		<div id="zfcmb">
+			target element
+		</div>
+		
+		<div id="render">
+			<fly-table :fields="fields" :goods="goods">
+				<span slot="title">Fly Table Component</span>
+			</fly-table>
 		</div>
 		
 	</body>
