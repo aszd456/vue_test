@@ -225,41 +225,171 @@ Vue.component('fly-table', {
 })
 
 let render_vm = new Vue({
-	el:'#render',
+	el: '#render',
 	data() {
 		return {
-			fields: [
-				{
-					label:'名称',
-					prop:'name'
+			fields: [{
+					label: '名称',
+					prop: 'name'
 				},
 				{
-					label:'数量',
-					prop:'quantity'
+					label: '数量',
+					prop: 'quantity'
 				},
 				{
-					label:'价格',
-					prop:'prize'
+					label: '价格',
+					prop: 'prize'
 				},
 				{
-					label:'',
-					prop:'operate'
+					label: '',
+					prop: 'operate'
 				},
 			],
-			goods: [
-				{
-					name:'苹果',
-					quantity:200,
-					prize:6.8,
-					isMarked:false
+			goods: [{
+					name: '苹果',
+					quantity: 200,
+					prize: 6.8,
+					isMarked: false
 				},
 				{
-					name:'西瓜',
-					quantity:50,
-					prize:4.8,
-					isMarked:false
+					name: '西瓜',
+					quantity: 50,
+					prize: 4.8,
+					isMarked: false
 				}
 			]
 		}
 	},
+})
+
+/**全局过滤**/
+Vue.filter('supplyTitle3', value => {
+	return value.replace(/@/g, '')
+})
+
+new Vue({
+	el: '#filterDiv',
+	data: {
+		title: '@Test#%for#%Filter@'
+	},
+	filters: {
+		supplyTitle1(value) {
+			return value.replace(/#/g, '')
+		},
+		supplyTitle2(value) {
+			return value.replace(/%/g, '')
+		}
+	}
+})
+
+/******自定义指令****/
+new Vue({
+	el: '#directDiv',
+	data: {
+		title: 'Test for Directive',
+		style: {
+			fontStyle: 'italic'
+		}
+	},
+	methods: {
+		handleStyle() {
+			this.$set(this.style, 'color', '#ff0000')
+			this.$set(this.style, 'transform', 'rotateX(45deg)')
+		}
+	},
+	directives: {
+		style: {
+			bind(el, binding, vnode) {
+				console.log('%c-------binding参数：el,binding,vnode------', 'font-size:18px;')
+				console.log('%o\n\n%o\n\n%o', el, binding, vnode)
+				let styles = binding.value
+				Object.keys(styles).forEach(key => el.style[key] = styles[key])
+			},
+			update(el, binding, vnode) {
+				let styles = binding.value
+				Object.keys(styles).forEach(key => el.style[key] = styles[key])
+			}
+		},
+		some(el, binding) {
+			let text = el.innerText
+			let modifiers = binding.modifiers
+			if (modifiers.upper) {
+				el.innerText = text.toUpperCase()
+			}
+			if (modifiers.lower) {
+				el.innerText = text.toLocaleLowerCase()
+			}
+		}
+	}
+})
+
+let EasyTitle = {
+	name: 'EasyTitle',
+	template: '<h1>大器难成</h1>'
+}
+let EasyMotto = {
+	name: 'EasyMotto',
+	template: '<p>过意防水</p>'
+}
+let EasyWish = {
+	name: 'EasyWish',
+	template: '<p>傻逼</p>'
+}
+
+new Vue({
+	el: '#zjDiv',
+	components: {
+		EasyTitle,
+		EasyMotto,
+		EasyWish
+	}
+})
+
+let mixin = {
+	data: {
+		title: 'Test for mixin'
+	},
+	mounted() {
+		console.log('mixin mounted')
+	},
+	methods: {
+		toggleText() {
+			this.text = 'mixin text'
+		}
+	},
+	computed: {
+		plusText() {
+			return '+ ' + this.text + ' +'
+		}
+	},
+	filters: {
+		supplyUpper: value => value.toUpperCase()
+	},
+	watch: {
+		text(value) {
+			console.log('mixin text:' + value)
+		}
+	}
+}
+
+new Vue({
+	el: '#mixDiv',
+	mixins: [mixin],
+	data: {
+		title: 'A Title',
+		text: 'which one?'
+	},
+	mounted() {
+		console.log('instance mounted')
+	},
+	methods: {
+		toggleText() {
+			this.text = 'instance text'
+		}
+	},
+	watch: {
+		text(value) {
+			console.log('instance text:' + value)
+		}
+	}
 })
